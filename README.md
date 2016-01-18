@@ -49,7 +49,7 @@ end
 
 Now curl gives us output that looks like:
 
-```json
+```
 [{"id"=>1,
   "name"=>"rosa",
   "age"=>0,
@@ -87,11 +87,11 @@ To set status code in your controller, just pass `:status` to our render method.
 ```ruby
 def index
   pets = Pet.all
-  render json: pets.as_json(except: [:created_at, :updated_at]), status: :success
+  render :json => pets.as_json(except: [:created_at, :updated_at]), :status => :ok
 end
 ```
 
-Notice in the example above, I used both `:success` as well as the official numeric value of 200 to inform the consumer that the request was a success. I tend to use the built-in Rails symbols for this, as they're more explicit, however its good to know at least the most common [HTTP status codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
+Notice in the example above, I used both `:ok` as well as the official numeric value of 200 to inform the consumer that the request was a success. I tend to use the built-in Rails symbols for this, as they're more explicit, however its good to know at least the most common [HTTP status codes](http://en.wikipedia.org/wiki/List_of_HTTP_status_codes).
 
 + 200 - :ok
 + 204 - :no_content
@@ -121,7 +121,7 @@ What if we get params that don't match a pet? What do we do? How should our code
 ```ruby
 def show
   pet = Pet.find_by(id: params[:id])
-  
+
   if pet
     render json: pet.as_json(except: [:created_at, :updated_at]), status: :ok
   else
