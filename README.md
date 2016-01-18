@@ -33,17 +33,17 @@ Since we are building a JSON api, we don't want to render an html template (or r
 # pets_controller.rb
 def index
   @pets = Pet.all
-  render json: { ready_for_lunch: "yassss" }
+  render :json => { ready_for_lunch: "yassss" }
 end
 ```
 
-Notice that we didn't for realsies write and JSON. We provided a plain Ruby hash and let Rails do the conversion for us (with the `render json:` call. So to make progress on our tests, we could do something like:
+Notice that we didn't for realsies write and JSON. We provided a plain Ruby hash and let Rails do the conversion for us (with the `render :json =>` call. So to make progress on our tests, we could do something like:
 
 ```ruby
 # pets_controller.rb
 def index
   pets = Pet.all
-  render json: pets
+  render :json => pets
 end
 ```
 
@@ -73,7 +73,7 @@ class PetsController < ApplicationController
 
   def index
     pets = Pet.all
-    render json: pets.as_json(except: [:created_at, :updated_at])
+    render :json => pets.as_json(except: [:created_at, :updated_at])
   end
 end
 ```
