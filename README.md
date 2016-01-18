@@ -111,21 +111,23 @@ Let's add this same approach for the show action, start by adding a route, then 
 # pets_controller.rb
 def show
   pet = Pet.find(params[:id])
-  render json: pet.as_json(except: [:created_at, :updated_at])
+  render :json => pet.as_json(except: [:created_at, :updated_at])
 end
 ```
 
 #### What if we can't find a pet?
 What if we get params that don't match a pet? What do we do? How should our code change? At the very least, we should make sure that we don't throw an error. Also, we should return a status code that indicates to the consumer (which is another service) that we couldn't find any content to match their request. Fortuantely, the `204` status code exists for exactly this reason. Let's change our `show` method to:
 
+**Note** that we switch from using the `find` method to the `find_by` method because `find` will return an error before getting to the conditional if the given Pet has not been found.
+
 ```ruby
 def show
   pet = Pet.find_by(id: params[:id])
 
   if pet
-    render json: pet.as_json(except: [:created_at, :updated_at]), status: :ok
+    render :json => pet.as_json(except: [:created_at, :updated_at]), :status => :ok
   else
-    render json: [], status: 204
+    render :json => [], :status => 204
   end
 end
 ```
