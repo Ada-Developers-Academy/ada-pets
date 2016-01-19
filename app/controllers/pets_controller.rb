@@ -6,5 +6,14 @@ class PetsController < ApplicationController
   end
 
   def show
+    # pet = Pet.find(params[:id])
+    pet = Pet.find_by(id: params[:id])
+
+    if pet
+      render :json => pet.as_json(except: [:created_at, :updated_at]),
+        :status => :ok
+    else
+      render :json => [], :status => :no_content
+    end
   end
 end
