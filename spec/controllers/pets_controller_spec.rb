@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe PetsController, type: :controller do
-  let(:rosa)   { Pet.create(name: "Rosalita", human: "<3Jeremy!", age: 7) }
+  let!(:rosa)   { Pet.create(name: "Rosalita", human: "<3Jeremy!", age: 7) }
   let(:raquel) { Pet.create(name: "Raquel",   human: "<3Jeremy!", age: 12) }
   let(:keys)   { ["age", "human", "id", "name"] }
 
@@ -35,7 +35,7 @@ RSpec.describe PetsController, type: :controller do
     end
   end
 
-  describe "GET 'show'" do    
+  describe "GET 'show'" do
     it "is successful" do
       get :show, id: rosa.id
       expect(response.response_code).to eq 200
@@ -83,6 +83,39 @@ RSpec.describe PetsController, type: :controller do
   end
 
   describe "GET 'search'" do
-    pending "Implement fuzzy name search"
+    it "is successful" do
+      get :search, query: "rosa"
+      expect(response.response_code).to eq 200
+    end
+
+    it "returns json" do
+      get :search, query: "rosa"
+      expect(response.header['Content-Type']).to include 'application/json'
+    end
+
+    context "the returned json object" do
+      before :each do
+        get :search, query: "rosa"
+        @response = JSON.parse response.body
+      end
+    end
+
+    context "no pets found" do
+      before :each do
+        get :search, query: "sssss"
+      end
+
+      it "is successful" do
+        expect(response).to be_successful
+      end
+
+      it "returns a 204 (no content)" do
+        expect(response.response_code).to eq 204
+      end
+
+      it "expects the response body to be an empty array" do
+        expect(response.body).to eq "[]"
+      end
+    end
   end
 end

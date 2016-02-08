@@ -16,4 +16,16 @@ class PetsController < ApplicationController
       render :json => [], :status => :no_content
     end
   end
+
+  def search
+    pets = Pet.search(params[:query])
+
+    if pets.empty?
+      render :json => [], :status => :no_content
+    else
+      render :json => pets.as_json(except: [:created_at, :updated_at]),
+        :status => :ok
+    end
+  end
+
 end
